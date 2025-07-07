@@ -1,6 +1,7 @@
 #!/bin/bash
-# System-wide Performance Optimization Script for Framework Laptop
-# Optimizes CPU, SSD, memory, and kernel parameters
+# System Performance Optimization for Debian 12 on Framework Laptop
+# Intel i7-1280P | 32GB RAM | 2TB NVMe SSD
+# Optimizes CPU, NVMe, memory, and kernel parameters
 
 set -e
 
@@ -20,44 +21,27 @@ check_root() {
 }
 
 install_performance_tools() {
-    log "Installing performance monitoring and tuning tools..."
+    log "Installing performance tools for Debian 12..."
     
-    if command -v apt-get &> /dev/null; then
-        sudo apt-get install -y \
-            linux-tools-generic linux-tools-common \
-            htop iotop iftop nethogs \
-            sysstat dstat \
-            powertop tlp tlp-rdw \
-            cpufrequtils \
-            nvme-cli smartmontools \
-            preload \
-            earlyoom \
-            irqbalance \
-            tuned tuned-utils
-    elif command -v dnf &> /dev/null; then
-        sudo dnf install -y \
-            kernel-tools \
-            htop iotop iftop nethogs \
-            sysstat dstat \
-            powertop tlp tlp-rdw \
-            cpufrequtils \
-            nvme-cli smartmontools \
-            preload \
-            earlyoom \
-            irqbalance \
-            tuned
-    elif command -v pacman &> /dev/null; then
-        sudo pacman -S --noconfirm \
-            linux-tools \
-            htop iotop iftop nethogs \
-            sysstat \
-            powertop tlp tlp-rdw \
-            cpupower \
-            nvme-cli smartmontools \
-            preload \
-            earlyoom \
-            irqbalance
-    fi
+    # Update package list
+    sudo apt-get update
+    
+    # Install performance monitoring and tuning tools
+    sudo apt-get install -y \
+        linux-cpupower \
+        htop iotop iftop nethogs \
+        sysstat dstat \
+        powertop tlp tlp-rdw \
+        cpufrequtils \
+        nvme-cli smartmontools \
+        preload \
+        earlyoom \
+        irqbalance \
+        tuned tuned-utils \
+        intel-microcode \
+        firmware-misc-nonfree
+    
+    log "Performance tools installed"
 }
 
 optimize_cpu_performance() {
@@ -68,9 +52,10 @@ optimize_cpu_performance() {
         sudo cpupower frequency-set -g performance
     fi
     
-    # Create TLP configuration for balanced performance
+    # Create TLP configuration optimized for Framework Laptop
     sudo tee /etc/tlp.conf > /dev/null << 'EOF'
-# Framework Laptop TLP Configuration
+# Framework Laptop TLP Configuration for Debian 12
+# Intel i7-1280P Optimization
 
 # CPU Performance
 CPU_SCALING_GOVERNOR_ON_AC=performance
@@ -218,21 +203,26 @@ EOF
 }
 
 setup_zram_swap() {
-    log "Setting up ZRAM compressed swap..."
+    log "Setting up ZRAM compressed swap for Debian 12..."
     
-    # Install zram-tools if available
-    if command -v apt-get &> /dev/null; then
-        sudo apt-get install -y zram-tools
-        
-        # Configure ZRAM (25% of RAM for compressed swap)
-        echo "PERCENT=25" | sudo tee /etc/default/zramswap
-        echo "PRIORITY=100" | sudo tee -a /etc/default/zramswap
-        
-        sudo systemctl enable zramswap
-        sudo systemctl restart zramswap
-    else
-        log "ZRAM tools not available for this distribution"
-    fi
+    # Install zram-tools
+    sudo apt-get install -y zram-tools systemd-zram-generator
+    
+    # Configure ZRAM (25% of 32GB = 8GB compressed swap)
+    sudo tee /etc/systemd/zram-generator.conf > /dev/null << 'EOF'
+[zram0]
+zram-size = min(ram / 4, 8192)
+compression-algorithm = zstd
+swap-priority = 100
+fs-type = swap
+EOF
+    
+    # Enable and start zram
+    sudo systemctl daemon-reload
+    sudo systemctl enable systemd-zram-setup@zram0.service
+    sudo systemctl start systemd-zram-setup@zram0.service
+    
+    log "ZRAM swap configured"
 }
 
 optimize_kernel_modules() {
@@ -297,11 +287,11 @@ create_performance_profile() {
     log "Creating performance tuned profile..."
     
     if command -v tuned-adm &> /dev/null; then
-        # Create custom tuned profile
+        # Create custom tuned profile for Framework Laptop
         sudo mkdir -p /etc/tuned/framework-performance
         sudo tee /etc/tuned/framework-performance/tuned.conf > /dev/null << 'EOF'
 [main]
-summary=Framework Laptop Performance Profile
+summary=Framework Laptop Debian 12 Performance Profile
 include=throughput-performance
 
 [cpu]
@@ -366,6 +356,8 @@ main() {
     echo "- iotop: I/O usage monitor"
     echo "- powertop: Power consumption analyzer"
     echo "- nvme-cli: NVMe SSD management"
+    echo "- tlp: Advanced power management"
+    echo "- tuned: System tuning daemon"
     echo ""
     log "Please reboot to apply all optimizations"
 }

@@ -1,5 +1,6 @@
 #!/bin/bash
-# Docker Installation Script with Performance Optimizations
+# Docker Installation Script for Debian 12 (Bookworm)
+# Optimized for Framework Laptop with Intel i7-1280P
 
 set -e
 
@@ -12,63 +13,43 @@ error() {
     exit 1
 }
 
-detect_distro() {
+verify_debian() {
     if [ -f /etc/os-release ]; then
         . /etc/os-release
-        DISTRO=$ID
-        VERSION=$VERSION_ID
+        if [ "$ID" != "debian" ] || [ "$VERSION_ID" != "12" ]; then
+            error "This script is for Debian 12 (Bookworm) only. Found: $ID $VERSION_ID"
+        fi
     else
-        error "Cannot detect Linux distribution"
+        error "Cannot verify Debian installation"
     fi
+    log "Verified: Debian 12 (Bookworm)"
 }
 
 remove_old_docker() {
     log "Removing old Docker installations if any..."
-    
-    if command -v apt-get &> /dev/null; then
-        sudo apt-get remove -y docker docker-engine docker.io containerd runc 2>/dev/null || true
-    elif command -v dnf &> /dev/null; then
-        sudo dnf remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine 2>/dev/null || true
-    elif command -v pacman &> /dev/null; then
-        sudo pacman -Rns --noconfirm docker 2>/dev/null || true
-    fi
+    sudo apt-get remove -y docker docker-engine docker.io containerd runc 2>/dev/null || true
+    sudo apt-get autoremove -y
 }
 
-install_docker_debian() {
-    log "Installing Docker on Debian/Ubuntu..."
+install_docker() {
+    log "Installing Docker CE on Debian 12..."
     
     # Add Docker's official GPG key
     sudo install -m 0755 -d /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/$DISTRO/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
     sudo chmod a+r /etc/apt/keyrings/docker.gpg
     
     # Add the repository to Apt sources
     echo \
-      "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/$DISTRO \
-      "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+      "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+      bookworm stable" | \
       sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     
-    # Install Docker
+    # Update and install Docker
     sudo apt-get update
     sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-}
-
-install_docker_fedora() {
-    log "Installing Docker on Fedora..."
     
-    # Add Docker repository
-    sudo dnf -y install dnf-plugins-core
-    sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
-    
-    # Install Docker
-    sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-}
-
-install_docker_arch() {
-    log "Installing Docker on Arch Linux..."
-    
-    # Install Docker
-    sudo pacman -S --noconfirm docker docker-compose docker-buildx
+    log "Docker CE installed successfully"
 }
 
 configure_docker() {
@@ -102,7 +83,10 @@ configure_docker() {
             "Hard": 64000,
             "Soft": 64000
         }
-    }
+    },
+    "dns": ["8.8.8.8", "8.8.4.4"],
+    "insecure-registries": [],
+    "registry-mirrors": []
 }
 EOF
     
@@ -171,26 +155,11 @@ verify_installation() {
 }
 
 main() {
-    log "Starting Docker installation..."
+    log "Starting Docker installation for Debian 12..."
     
-    detect_distro
+    verify_debian
     remove_old_docker
-    
-    case $DISTRO in
-        ubuntu|debian)
-            install_docker_debian
-            ;;
-        fedora)
-            install_docker_fedora
-            ;;
-        arch|manjaro)
-            install_docker_arch
-            ;;
-        *)
-            error "Unsupported distribution: $DISTRO"
-            ;;
-    esac
-    
+    install_docker
     configure_docker
     setup_docker_compose_alias
     install_docker_tools

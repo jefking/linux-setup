@@ -1,6 +1,6 @@
-# Debian (Development) Setup
+# Debian 12 Framework Laptop Setup
 
-Automated setup scripts for a fresh Linux installation on Framework Laptop (Intel i7-1280P, 32GB RAM, 2TB NVMe SSD).
+Automated setup scripts for Debian 12 (Bookworm) on Framework Laptop with Intel i7-1280P, 32GB RAM, and 2TB NVMe SSD.
 
 ## Quick Start
 
@@ -8,16 +8,12 @@ Automated setup scripts for a fresh Linux installation on Framework Laptop (Inte
 
 ```bash
 # Install Git
-sudo apt update && sudo apt install git -y  # Ubuntu/Debian
-# OR
-sudo dnf install git -y                     # Fedora
-# OR
-sudo pacman -S git                          # Arch
+sudo apt update && sudo apt install git -y
 
-# Install Claude Code (choose one method)
-# Method 1: via npm
+# Install Claude Code
+# Method 1: via npm (recommended)
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-sudo apt-get install -y nodejs
+sudo apt install -y nodejs
 npm install -g @anthropic/claude-code
 claude login
 
@@ -39,14 +35,14 @@ chmod +x *.sh
 ```
 
 This will:
-1. Install Docker with performance optimizations
-2. Apply system-wide performance improvements
+1. Install Docker CE with Debian-optimized performance settings
+2. Apply Framework laptop-specific performance improvements
 3. Create ~/git folder structure (personal, work, forks, experiments)
-4. Clone all your existing repositories
-5. Install GitHub CLI
-6. Install Atlassian Go CLI
+4. Clone all your existing repositories from ~/Documents/git
+5. Install GitHub CLI (gh)
+6. Install Atlassian Go CLI (jira)
 7. Install modern development tools
-8. Set up RAM-based development workspace
+8. Set up 8GB RAM-based development workspace
 
 ### 3. Post-Installation
 
@@ -68,11 +64,11 @@ dev-sync-to-disk some-project  # Save changes back
 
 ## What Gets Installed
 
-- **Docker CE** with tmpfs storage and performance tuning
-- **Development Tools**: gh, jira, tmux, fzf, ripgrep, bat, delta
-- **Performance Tools**: htop, iotop, powertop, nvme-cli
-- **System Optimizations**: CPU governor, memory tuning, SSD optimization
-- **RAM Workspace**: 8GB tmpfs for active development
+- **Docker CE** - Latest version with tmpfs storage and performance tuning
+- **Development Tools**: GitHub CLI, Atlassian CLI, tmux, fzf, ripgrep, bat, delta
+- **Performance Tools**: htop, iotop, powertop, nvme-cli, tuned
+- **System Optimizations**: CPU governor, memory tuning, NVMe SSD optimization
+- **RAM Workspace**: 8GB tmpfs for blazing-fast development
 - **Build Caches**: 4GB tmpfs for npm, cargo, go, docker
 
 ## Performance Improvements

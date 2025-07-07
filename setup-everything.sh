@@ -1,6 +1,6 @@
 #!/bin/bash
-# Complete Setup Script for Fresh Linux Installation
-# Run this after installing git and claude
+# Complete Setup Script for Debian 12 on Framework Laptop
+# Intel i7-1280P | 32GB RAM | 2TB NVMe SSD
 
 set -e
 
@@ -29,18 +29,20 @@ warning() {
 print_banner() {
     clear
     echo "============================================="
-    echo "   Framework Laptop Complete Setup Script"
+    echo "   Framework Laptop Debian 12 Setup"
     echo "============================================="
     echo ""
+    echo "Intel i7-1280P | 32GB RAM | 2TB NVMe SSD"
+    echo ""
     echo "This script will:"
-    echo "1. Install Docker with optimizations"
-    echo "2. Apply system performance improvements"
-    echo "3. Create git folder structure"
+    echo "1. Install Docker CE with Debian optimizations"
+    echo "2. Apply Framework laptop performance tuning"
+    echo "3. Create organized git folder structure"
     echo "4. Clone your existing repositories"
-    echo "5. Install GitHub CLI"
-    echo "6. Install Atlassian Go CLI"
-    echo "7. Install development tools"
-    echo "8. Set up RAM-based development"
+    echo "5. Install GitHub CLI (gh)"
+    echo "6. Install Atlassian Go CLI (jira)"
+    echo "7. Install modern development tools"
+    echo "8. Set up 8GB RAM-based development workspace"
     echo ""
 }
 

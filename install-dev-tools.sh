@@ -1,5 +1,6 @@
 #!/bin/bash
-# Development Tools Installation Script
+# Development Tools Installation Script for Debian 12
+# Optimized for Framework Laptop development environment
 
 set -e
 
@@ -45,26 +46,16 @@ check_current_repos() {
 
 # Install GitHub CLI
 install_github_cli() {
-    log "Installing GitHub CLI..."
+    log "Installing GitHub CLI on Debian 12..."
     
-    if command -v apt-get &> /dev/null; then
-        # Debian/Ubuntu
-        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-        sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-        sudo apt update
-        sudo apt install gh -y
-    elif command -v dnf &> /dev/null; then
-        # Fedora
-        sudo dnf install -y 'dnf-command(config-manager)'
-        sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
-        sudo dnf install -y gh
-    elif command -v pacman &> /dev/null; then
-        # Arch Linux
-        sudo pacman -S --noconfirm github-cli
-    else
-        error "Unsupported package manager for GitHub CLI installation"
-    fi
+    # Add GitHub CLI repository
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+    sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+    
+    # Install GitHub CLI
+    sudo apt update
+    sudo apt install gh -y
     
     log "GitHub CLI installed successfully"
 }
@@ -171,45 +162,29 @@ clone_repositories() {
 
 # Install other development tools
 install_other_tools() {
-    log "Installing additional development tools..."
+    log "Installing modern development tools for Debian 12..."
     
-    if command -v apt-get &> /dev/null; then
-        sudo apt-get install -y \
-            tmux \
-            jq \
-            httpie \
-            tree \
-            ncdu \
-            fzf \
-            ripgrep \
-            fd-find \
-            bat \
-            delta
-    elif command -v dnf &> /dev/null; then
-        sudo dnf install -y \
-            tmux \
-            jq \
-            httpie \
-            tree \
-            ncdu \
-            fzf \
-            ripgrep \
-            fd-find \
-            bat \
-            git-delta
-    elif command -v pacman &> /dev/null; then
-        sudo pacman -S --noconfirm \
-            tmux \
-            jq \
-            httpie \
-            tree \
-            ncdu \
-            fzf \
-            ripgrep \
-            fd \
-            bat \
-            git-delta
-    fi
+    # Install from Debian repositories
+    sudo apt-get install -y \
+        tmux \
+        jq \
+        httpie \
+        tree \
+        ncdu \
+        fzf \
+        ripgrep \
+        fd-find \
+        bat \
+        git-delta \
+        vim \
+        nano \
+        curl \
+        wget \
+        unzip \
+        zip \
+        build-essential
+    
+    log "Development tools installed"
 }
 
 # Setup git configuration
@@ -246,7 +221,7 @@ setup_git_config() {
 }
 
 main() {
-    log "Starting development tools installation..."
+    log "Starting development tools installation for Debian 12..."
     
     # Check for existing repos first
     check_current_repos
@@ -264,16 +239,17 @@ main() {
     echo ""
     log "Development tools installation complete!"
     echo ""
-    echo "Tools installed:"
+    echo "Tools installed for Debian 12:"
     echo "✓ GitHub CLI (gh)"
     echo "✓ Atlassian CLI (jira)"
-    echo "✓ tmux, jq, httpie, tree, ncdu"
-    echo "✓ fzf, ripgrep, fd, bat, delta"
+    echo "✓ Modern CLI tools: tmux, jq, httpie, tree, ncdu"
+    echo "✓ Search tools: fzf, ripgrep, fd, bat, delta"
+    echo "✓ Development essentials: vim, build-essential"
     echo ""
     echo "Git setup:"
-    echo "✓ Git folder created at ~/git"
-    echo "✓ Git aliases configured"
-    echo "✓ Repositories cloned (if any)"
+    echo "✓ Git folder created at ~/git with organized structure"
+    echo "✓ Git aliases configured for productivity"
+    echo "✓ Repositories cloned from existing setup"
     echo ""
     echo "Next steps:"
     echo "1. Run 'gh auth login' to authenticate with GitHub"
