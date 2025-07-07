@@ -1,4 +1,4 @@
-# Linux Setup
+# Debian (Development) Setup
 
 Automated setup scripts for a fresh Linux installation on Framework Laptop (Intel i7-1280P, 32GB RAM, 2TB NVMe SSD).
 
