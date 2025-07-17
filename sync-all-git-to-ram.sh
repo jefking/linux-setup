@@ -54,6 +54,28 @@ sync_repo() {
     local repo_name=$(basename "$repo_path")
     local dest_path="$RAM_WORKSPACE/$repo_name"
     
+    # Special handling for teams folder (non-git directory)
+    if [ "$repo_name" = "teams" ]; then
+        log "Syncing teams folder (non-git directory) to RAM..."
+        
+        # Remove existing if present
+        if [ -d "$dest_path" ]; then
+            rm -rf "$dest_path"
+        fi
+        
+        # Copy to RAM
+        cp -r "$repo_path" "$dest_path"
+        
+        # Check if sync was successful
+        if [ -d "$dest_path" ]; then
+            log "✓ teams folder synced successfully"
+            return 0
+        else
+            error "✗ Failed to sync teams folder"
+            return 1
+        fi
+    fi
+    
     if [ ! -d "$repo_path/.git" ]; then
         warn "Skipping $repo_name - not a git repository"
         return 0
@@ -141,7 +163,9 @@ if [ "$1" = "--dry-run" ]; then
     for repo_path in "$GIT_DIR"/*; do
         if [ -d "$repo_path" ]; then
             repo_name=$(basename "$repo_path")
-            if [ -d "$repo_path/.git" ]; then
+            if [ "$repo_name" = "teams" ]; then
+                echo "  ✓ $repo_name (non-git directory) ($(du -sh "$repo_path" | cut -f1))"
+            elif [ -d "$repo_path/.git" ]; then
                 echo "  ✓ $repo_name ($(du -sh "$repo_path" | cut -f1))"
             else
                 echo "  ✗ $repo_name (not a git repo)"
