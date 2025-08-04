@@ -54,9 +54,9 @@ sync_repo() {
     local repo_name=$(basename "$repo_path")
     local dest_path="$RAM_WORKSPACE/$repo_name"
     
-    # Special handling for teams folder (non-git directory)
-    if [ "$repo_name" = "teams" ]; then
-        log "Syncing teams folder (non-git directory) to RAM..."
+    # Special handling for non-git directories (teams and streetlight)
+    if [ "$repo_name" = "teams" ] || [ "$repo_name" = "streetlight" ]; then
+        log "Syncing $repo_name folder (non-git directory) to RAM..."
         
         # Remove existing if present
         if [ -d "$dest_path" ]; then
@@ -68,10 +68,10 @@ sync_repo() {
         
         # Check if sync was successful
         if [ -d "$dest_path" ]; then
-            log "✓ teams folder synced successfully"
+            log "✓ $repo_name folder synced successfully"
             return 0
         else
-            error "✗ Failed to sync teams folder"
+            error "✗ Failed to sync $repo_name folder"
             return 1
         fi
     fi
@@ -163,7 +163,7 @@ if [ "$1" = "--dry-run" ]; then
     for repo_path in "$GIT_DIR"/*; do
         if [ -d "$repo_path" ]; then
             repo_name=$(basename "$repo_path")
-            if [ "$repo_name" = "teams" ]; then
+            if [ "$repo_name" = "teams" ] || [ "$repo_name" = "streetlight" ]; then
                 echo "  ✓ $repo_name (non-git directory) ($(du -sh "$repo_path" | cut -f1))"
             elif [ -d "$repo_path/.git" ]; then
                 echo "  ✓ $repo_name ($(du -sh "$repo_path" | cut -f1))"
