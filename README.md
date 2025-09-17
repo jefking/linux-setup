@@ -1,6 +1,6 @@
-# Debian 12 Framework Laptop Setup
+# Debian 13 Modern Laptop Setup
 
-Automated setup scripts for Debian 12 (Bookworm) on Framework Laptop with Intel i7-1280P, 32GB RAM, and 2TB NVMe SSD.
+Automated setup scripts for Debian 13 (Trixie) on modern laptops with AMD Ryzen AI 9 HX 370, 64GB RAM, 2TB NVMe SSD, and WiFi 7.
 
 ## Quick Start
 
@@ -27,25 +27,28 @@ cd linux-setup
 chmod +x *.sh
 ```
 
-### 2. Run Enhanced Automated Setup
+### 2. Run AMD + WiFi 7 Optimized Setup
 
 ```bash
-# Run the enhanced complete setup (RECOMMENDED)
-./enhanced-dev-setup.sh
+# Run the AMD Ryzen AI 9 HX 370 + WiFi 7 optimized setup (RECOMMENDED)
+./setup-amd-wifi7-optimization.sh
 
-# OR run the original setup
-./setup-everything.sh
+# OR run individual optimization scripts
+./system-performance-setup.sh
+./wifi7-optimization.sh
+./memory-optimization-64gb.sh
+./ac-performance-boost.sh
 ```
 
-**Enhanced setup includes:**
-1. **12GB RAM workspace + 6GB build cache** (auto-sized for your system)
-2. **Persistent tmpfs mounts** (survive reboots)
-3. **Intelligent sync scripts** with conflict detection and backups
-4. **Compiler optimizations** for Rust, Node.js, Go, Python, Java, C/C++, Docker
-5. **Advanced performance monitoring** with alerts and automated cleanup
-6. **Framework laptop-specific optimizations**
-7. **Enhanced development shortcuts** and aliases
-8. All original features from setup-everything.sh
+**AMD + WiFi 7 optimized setup includes:**
+1. **16GB RAM workspace + 8GB build cache** (optimized for 64GB RAM)
+2. **AMD Ryzen AI 9 HX 370 CPU optimizations** (replaces Intel P-state controls)
+3. **WiFi 7 MediaTek MT7925 optimizations** (160MHz, low latency, high throughput)
+4. **64GB RAM management** (minimal swapping, optimized dirty pages)
+5. **NVMe SSD performance tuning** (PNY CS3140 2TB optimizations)
+6. **Advanced performance monitoring** with AMD-specific sensors
+7. **Development environment** optimized for high-memory systems
+8. **Debian 13 compatibility** with latest kernel features
 
 ### 3. Post-Installation
 
@@ -63,24 +66,24 @@ dev-start             # Launch development environment
 # OR
 dev-help              # Show all available commands
 
-# Quick development workflow
-dev-sync ~/git/some-project        # Sync project to RAM
-dev-cd some-project                 # Navigate to RAM project
-# Work blazingly fast with optimized compilers...
-dev-sync-to-disk some-project       # Save changes back
-dev-monitor                         # Check performance stats
+# Quick development workflow for 64GB system
+dev-to-ram ~/git/some-project       # Sync project to 16GB RAM workspace
+dev-ram                             # Navigate to RAM workspace
+# Work blazingly fast with optimized compilers and 64GB RAM...
+dev-from-ram some-project ~/git/    # Save changes back
+perf-overview                       # Check system performance
 ```
 
 ## What Gets Installed
 
-### Enhanced Setup (enhanced-dev-setup.sh)
-- **RAM Workspace**: 12GB tmpfs with persistent mounts and intelligent sync
-- **Build Caches**: 6GB tmpfs with compiler-specific optimizations
-- **Compiler Optimizations**: Rust (sccache, LLD), Node.js, Go, Python, Java, C/C++ (ccache)
-- **Docker**: BuildKit with RAM-based storage and advanced caching
-- **Monitoring**: Advanced performance monitoring with alerts and automated cleanup
-- **Sync Scripts**: Conflict detection, backups, incremental sync
-- **Development Tools**: Enhanced aliases, shortcuts, and productivity commands
+### AMD + WiFi 7 Optimized Setup (setup-amd-wifi7-optimization.sh)
+- **RAM Workspace**: 16GB tmpfs optimized for 64GB RAM systems
+- **Build Caches**: 8GB tmpfs with AMD-optimized compiler settings
+- **CPU Optimizations**: AMD Ryzen AI 9 HX 370 specific tuning (boost, governors, power management)
+- **WiFi 7**: MediaTek MT7925 optimizations for 160MHz channels and low latency
+- **Memory Management**: 64GB RAM optimizations (minimal swapping, optimized dirty pages)
+- **NVMe Performance**: PNY CS3140 2TB specific optimizations
+- **Monitoring**: AMD-specific temperature and performance monitoring
 
 ### Base Setup (setup-everything.sh)
 - **Docker CE** - Latest version with tmpfs storage and performance tuning
