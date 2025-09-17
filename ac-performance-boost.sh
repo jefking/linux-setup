@@ -1,6 +1,6 @@
 #!/bin/bash
 # Additional Performance Optimizations for AC Power
-# Framework Laptop Intel i7-1280P - Maximum Performance Mode
+# Modern Laptop AMD Ryzen AI 9 HX 370 - Maximum Performance Mode
 
 set -e
 
@@ -27,11 +27,14 @@ maximize_cpu_performance() {
         echo performance | sudo tee $cpu > /dev/null
     done
     
-    # Set Intel P-state to maximum performance
-    if [ -d /sys/devices/system/cpu/intel_pstate ]; then
-        echo 100 | sudo tee /sys/devices/system/cpu/intel_pstate/min_perf_pct
-        echo 100 | sudo tee /sys/devices/system/cpu/intel_pstate/max_perf_pct
-        echo 0 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo
+    # Set AMD CPU performance to maximum
+    if [ -d /sys/devices/system/cpu/amd_pstate ]; then
+        echo performance | sudo tee /sys/devices/system/cpu/amd_pstate/status
+    fi
+
+    # Enable AMD boost
+    if [ -f /sys/devices/system/cpu/cpufreq/boost ]; then
+        echo 1 | sudo tee /sys/devices/system/cpu/cpufreq/boost
     fi
     
     # Disable CPU idle states for lower latency
@@ -56,12 +59,12 @@ optimize_pcie_performance() {
 
 optimize_gpu_performance() {
     log "Optimizing GPU performance..."
-    
-    # Intel GPU performance settings
-    if [ -d /sys/class/drm/card0/gt_max_freq_mhz ]; then
-        MAX_FREQ=$(cat /sys/class/drm/card0/gt_RP0_freq_mhz 2>/dev/null || echo "1450")
-        echo $MAX_FREQ | sudo tee /sys/class/drm/card0/gt_max_freq_mhz > /dev/null 2>&1 || true
-        echo $MAX_FREQ | sudo tee /sys/class/drm/card0/gt_boost_freq_mhz > /dev/null 2>&1 || true
+
+    # AMD GPU performance settings (Radeon 890M)
+    if [ -d /sys/class/drm/card0/device ]; then
+        # Set performance mode for AMD GPU
+        echo high | sudo tee /sys/class/drm/card0/device/power_dpm_force_performance_level > /dev/null 2>&1 || true
+        echo performance | sudo tee /sys/class/drm/card0/device/power_dpm_state > /dev/null 2>&1 || true
     fi
 }
 
@@ -123,11 +126,12 @@ echo ""
 echo "CPU Governor:"
 cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor | sort | uniq -c
 echo ""
-echo "Intel P-state:"
-if [ -d /sys/devices/system/cpu/intel_pstate ]; then
-    echo "Min: $(cat /sys/devices/system/cpu/intel_pstate/min_perf_pct)%"
-    echo "Max: $(cat /sys/devices/system/cpu/intel_pstate/max_perf_pct)%"
-    echo "Turbo: $([ $(cat /sys/devices/system/cpu/intel_pstate/no_turbo) -eq 0 ] && echo "Enabled" || echo "Disabled")"
+echo "AMD CPU State:"
+if [ -d /sys/devices/system/cpu/amd_pstate ]; then
+    echo "Status: $(cat /sys/devices/system/cpu/amd_pstate/status 2>/dev/null || echo "Not available")"
+fi
+if [ -f /sys/devices/system/cpu/cpufreq/boost ]; then
+    echo "Boost: $([ $(cat /sys/devices/system/cpu/cpufreq/boost) -eq 1 ] && echo "Enabled" || echo "Disabled")"
 fi
 echo ""
 echo "PCIe ASPM Policy:"
@@ -168,10 +172,12 @@ if on_ac_power; then
         echo performance > $cpu 2>/dev/null || true
     done
     
-    # Intel P-state
-    if [ -d /sys/devices/system/cpu/intel_pstate ]; then
-        echo 100 > /sys/devices/system/cpu/intel_pstate/min_perf_pct
-        echo 100 > /sys/devices/system/cpu/intel_pstate/max_perf_pct
+    # AMD CPU performance
+    if [ -d /sys/devices/system/cpu/amd_pstate ]; then
+        echo performance > /sys/devices/system/cpu/amd_pstate/status 2>/dev/null || true
+    fi
+    if [ -f /sys/devices/system/cpu/cpufreq/boost ]; then
+        echo 1 > /sys/devices/system/cpu/cpufreq/boost 2>/dev/null || true
     fi
     
     # PCIe Performance
@@ -215,7 +221,7 @@ main() {
     log "AC Performance optimizations complete!"
     echo ""
     echo "✅ CPU locked at maximum frequency"
-    echo "✅ Intel Turbo Boost enabled"
+    echo "✅ AMD Boost enabled"
     echo "✅ PCIe ASPM disabled for performance"
     echo "✅ Power saving features disabled"
     echo "✅ Network buffers increased"
