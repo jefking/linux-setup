@@ -31,7 +31,7 @@ install_performance_tools() {
         linux-cpupower \
         htop iotop iftop nethogs \
         sysstat dstat \
-        powertop tlp tlp-rdw \
+        powertop \
         nvme-cli smartmontools \
         preload \
         earlyoom \
@@ -64,67 +64,27 @@ optimize_cpu_performance() {
         sudo cpupower frequency-set -g performance
     fi
     
-    # Create TLP configuration optimized for Modern Laptop
-    sudo tee /etc/tlp.conf > /dev/null << 'EOF'
-# Modern Laptop TLP Configuration for Debian 13
-# AMD Ryzen AI 9 HX 370 Optimization
+    # Use tuned instead of TLP (since tuned is already installed and conflicts with TLP)
+    log "Using tuned for power management (conflicts with TLP resolved)"
 
-# CPU Performance
-CPU_SCALING_GOVERNOR_ON_AC=performance
-CPU_SCALING_GOVERNOR_ON_BAT=schedutil
-CPU_BOOST_ON_AC=1
-CPU_BOOST_ON_BAT=1
+    # Set CPU governor to performance using cpupower
+    if command -v cpupower &> /dev/null; then
+        sudo cpupower frequency-set -g performance
+        log "Set CPU governor to performance using cpupower"
+    fi
 
-# AMD CPU (Ryzen AI 9 HX 370 specific)
-CPU_ENERGY_PERF_POLICY_ON_AC=performance
-CPU_ENERGY_PERF_POLICY_ON_BAT=balance_performance
-CPU_MIN_PERF_ON_AC=60
-CPU_MAX_PERF_ON_AC=100
-CPU_MIN_PERF_ON_BAT=30
-CPU_MAX_PERF_ON_BAT=85
+    # Enable CPU boost
+    if [ -f /sys/devices/system/cpu/cpufreq/boost ]; then
+        echo 1 | sudo tee /sys/devices/system/cpu/cpufreq/boost > /dev/null
+        log "CPU boost enabled"
+    fi
 
-# Platform Profile
-PLATFORM_PROFILE_ON_AC=performance
-PLATFORM_PROFILE_ON_BAT=balanced
-
-# Turbo Boost
-CPU_HWP_DYN_BOOST_ON_AC=1
-CPU_HWP_DYN_BOOST_ON_BAT=0
-
-# PCIe Active State Power Management
-PCIE_ASPM_ON_AC=performance
-PCIE_ASPM_ON_BAT=powersupersave
-
-# Runtime Power Management
-RUNTIME_PM_ON_AC=on
-RUNTIME_PM_ON_BAT=auto
-
-# USB Autosuspend
-USB_AUTOSUSPEND=0
-
-# WiFi Power Saving (WiFi 7 MediaTek MT7925 optimizations)
-WIFI_PWR_ON_AC=off
-WIFI_PWR_ON_BAT=off
-
-# WiFi 7 specific optimizations
-WIFI_REG_DOMAIN=US
-
-# Restore settings on startup
-RESTORE_DEVICE_STATE_ON_STARTUP=1
-EOF
-    
-    # Enable TLP if it was installed successfully
-    if systemctl list-unit-files | grep -q tlp.service; then
-        sudo systemctl enable tlp
-        sudo systemctl start tlp
-        log "TLP power management enabled"
-    else
-        log "TLP not available, using alternative power management"
-        # Use cpupower as fallback
-        if command -v cpupower &> /dev/null; then
-            sudo cpupower frequency-set -g performance
-            log "Set CPU governor to performance using cpupower"
-        fi
+    # Configure WiFi power saving directly
+    WIFI_INTERFACE=$(iw dev 2>/dev/null | grep Interface | awk '{print $2}' | head -1)
+    if [ -n "$WIFI_INTERFACE" ]; then
+        sudo iw dev $WIFI_INTERFACE set power_save off 2>/dev/null || true
+        sudo iw reg set US 2>/dev/null || true
+        log "WiFi power saving disabled for performance"
     fi
 }
 
@@ -140,14 +100,13 @@ optimize_ssd_performance() {
         # Set optimal I/O scheduler for NVMe (none for direct hardware access)
         echo "none" | sudo tee /sys/block/$SSD_DEVICE/queue/scheduler
 
-        # Increase nr_requests for better throughput with 64GB RAM
-        echo "2048" | sudo tee /sys/block/$SSD_DEVICE/queue/nr_requests
+        # Increase nr_requests for better throughput with 64GB RAM (with error handling)
+        echo "1024" | sudo tee /sys/block/$SSD_DEVICE/queue/nr_requests 2>/dev/null || {
+            echo "512" | sudo tee /sys/block/$SSD_DEVICE/queue/nr_requests 2>/dev/null || true
+        }
 
         # Set read-ahead value optimized for NVMe
         echo "512" | sudo tee /sys/block/$SSD_DEVICE/queue/read_ahead_kb
-
-        # Optimize queue depth for NVMe
-        echo "32" | sudo tee /sys/block/$SSD_DEVICE/queue/nr_requests
 
         # Set optimal rotational setting for NVMe
         echo "0" | sudo tee /sys/block/$SSD_DEVICE/queue/rotational

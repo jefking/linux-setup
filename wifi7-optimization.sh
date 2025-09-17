@@ -22,8 +22,8 @@ check_wifi_device() {
         error "MediaTek MT7925 WiFi 7 device not found"
     fi
     
-    # Get WiFi interface name
-    WIFI_INTERFACE=$(iw dev | grep Interface | awk '{print $2}' | head -1)
+    # Get WiFi interface name using full path
+    WIFI_INTERFACE=$(/usr/sbin/iw dev | grep Interface | awk '{print $2}' | head -1)
     if [ -z "$WIFI_INTERFACE" ]; then
         error "No WiFi interface found"
     fi
@@ -124,10 +124,10 @@ configure_wifi_interface() {
     log "Configuring WiFi interface for optimal performance..."
     
     # Set WiFi interface to performance mode
-    sudo iw dev $WIFI_INTERFACE set power_save off 2>/dev/null || true
-    
+    sudo /usr/sbin/iw dev $WIFI_INTERFACE set power_save off 2>/dev/null || true
+
     # Set regulatory domain for maximum power
-    sudo iw reg set US 2>/dev/null || true
+    sudo /usr/sbin/iw reg set US 2>/dev/null || true
     
     # Configure interface for high performance
     sudo ethtool -K $WIFI_INTERFACE gro on 2>/dev/null || true
@@ -161,7 +161,7 @@ echo "=== WiFi 7 Performance Status ==="
 echo ""
 
 # Get WiFi interface
-WIFI_INTERFACE=$(iw dev | grep Interface | awk '{print $2}' | head -1)
+WIFI_INTERFACE=$(/usr/sbin/iw dev | grep Interface | awk '{print $2}' | head -1)
 
 if [ -n "$WIFI_INTERFACE" ]; then
     echo "Interface: $WIFI_INTERFACE"
@@ -169,7 +169,7 @@ if [ -n "$WIFI_INTERFACE" ]; then
     
     # Connection info
     echo "Connection Info:"
-    iw dev $WIFI_INTERFACE link 2>/dev/null | grep -E "(Connected|SSID|freq|signal|tx bitrate|rx bitrate)" || echo "Not connected"
+    /usr/sbin/iw dev $WIFI_INTERFACE link 2>/dev/null | grep -E "(Connected|SSID|freq|signal|tx bitrate|rx bitrate)" || echo "Not connected"
     echo ""
     
     # Interface statistics
