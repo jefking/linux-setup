@@ -108,19 +108,31 @@ run_ac_performance_boost() {
 install_additional_tools() {
     log "Installing additional performance tools..."
     
-    # Install AMD-specific tools
+    # Install AMD-specific tools (with error handling)
     sudo apt-get update
     sudo apt-get install -y \
-        ryzen-stabilizr \
-        zenstates \
         msr-tools \
         cpuid \
         lm-sensors \
         stress-ng \
         sysbench \
         iperf3 \
-        speedtest-cli \
-        neofetch
+        neofetch \
+        bc \
+        curl \
+        wget
+
+    # Try to install optional tools that may not be available
+    sudo apt-get install -y speedtest-cli || {
+        log "speedtest-cli not available, installing via pip..."
+        sudo apt-get install -y python3-pip
+        pip3 install speedtest-cli --user || true
+    }
+
+    # Try to install AMD-specific tools
+    sudo apt-get install -y ryzen-stabilizr zenstates || {
+        log "Some AMD tools not available in repositories, continuing..."
+    }
     
     # Install development tools optimized for high-memory systems
     sudo apt-get install -y \

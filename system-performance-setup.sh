@@ -32,7 +32,6 @@ install_performance_tools() {
         htop iotop iftop nethogs \
         sysstat dstat \
         powertop tlp tlp-rdw \
-        cpufrequtils \
         nvme-cli smartmontools \
         preload \
         earlyoom \
@@ -45,8 +44,14 @@ install_performance_tools() {
         iw \
         ethtool \
         msr-tools \
-        zenstates \
-        ryzen-stabilizr || true
+        lm-sensors \
+        stress-ng \
+        bc
+
+    # Try to install optional AMD tools (may not be available in all repos)
+    sudo apt-get install -y zenstates ryzen-stabilizr cpufrequtils || {
+        log "Some optional AMD tools not available in repositories, continuing..."
+    }
 
     log "Performance tools installed"
 }
@@ -108,9 +113,19 @@ WIFI_REG_DOMAIN=US
 RESTORE_DEVICE_STATE_ON_STARTUP=1
 EOF
     
-    # Enable TLP
-    sudo systemctl enable tlp
-    sudo systemctl start tlp
+    # Enable TLP if it was installed successfully
+    if systemctl list-unit-files | grep -q tlp.service; then
+        sudo systemctl enable tlp
+        sudo systemctl start tlp
+        log "TLP power management enabled"
+    else
+        log "TLP not available, using alternative power management"
+        # Use cpupower as fallback
+        if command -v cpupower &> /dev/null; then
+            sudo cpupower frequency-set -g performance
+            log "Set CPU governor to performance using cpupower"
+        fi
+    fi
 }
 
 optimize_ssd_performance() {
