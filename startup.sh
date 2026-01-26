@@ -108,7 +108,7 @@ check_prerequisites() {
     if [ ! -f "$SYNC_SCRIPT" ]; then
         warn "Sync script not found: $SYNC_SCRIPT"
         info "You can still use the development environment without the sync script"
-        info "To enable git repo syncing, ensure sync-all-git-to-ram.sh is in the same directory"
+        info "To enable ./git syncing, ensure sync-all-git-to-ram.sh is in the same directory"
         SYNC_SCRIPT=""  # Disable sync functionality but continue
     fi
 
@@ -157,7 +157,7 @@ sync_repositories() {
         return 0
     fi
 
-    info "Syncing ~/git (and optional ../peons) to RAM workspace..."
+    info "Syncing ./git/* to RAM workspace..."
 
     if [ -x "$SYNC_SCRIPT" ] && "$SYNC_SCRIPT"; then
         info "✓ Projects synced successfully"
@@ -382,11 +382,11 @@ if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     echo "Usage: $0 [options]"
     echo ""
     echo "Development environment startup script"
-    echo "Syncs ~/git into the RAM workspace and opens a development terminal"
+    echo "Syncs ./git into the RAM workspace and opens a development terminal"
     echo ""
     echo "Options:"
     echo "  --help       Show this help message"
-    echo "  --no-sync    Skip git repository sync"
+    echo "  --no-sync    Skip ./git sync"
     echo "  --info       Show system info only"
     echo ""
     echo "Log file: $STARTUP_LOG"
@@ -400,7 +400,7 @@ if [ "$1" = "--info" ]; then
 fi
 
 if [ "$1" = "--no-sync" ]; then
-    warn "Skipping git repository sync as requested"
+    warn "Skipping ./git sync as requested"
     SYNC_SCRIPT=""
 fi
 
