@@ -11,6 +11,17 @@ SYNC_SCRIPT="$SCRIPT_DIR/sync-all-git-to-ram.sh"
 RAM_WORKSPACE="/tmp/dev-workspace"
 STARTUP_LOG="$HOME/dev-startup.log"
 
+# Default repo root: README suggests cloning under ~/git.
+# Users can override by exporting GIT_DIR before running this script.
+GIT_DIR="${GIT_DIR:-}"
+if [ -z "$GIT_DIR" ] && [ -d "$HOME/git" ]; then
+    GIT_DIR="$HOME/git"
+fi
+
+# Export so helper scripts can see them.
+export RAM_WORKSPACE
+export GIT_DIR
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -157,10 +168,22 @@ sync_repositories() {
         return 0
     fi
 
-    info "Syncing ./git/* to RAM workspace..."
+    info "Syncing repositories from: ${GIT_DIR:-<unset>}"
+    info "Destination RAM workspace: $RAM_WORKSPACE"
 
     if [ -x "$SYNC_SCRIPT" ] && "$SYNC_SCRIPT"; then
         info "✓ Projects synced successfully"
+
+        # Warn if nothing actually ended up in the RAM workspace
+        if [ -d "$RAM_WORKSPACE" ]; then
+            shopt -s nullglob dotglob
+            local items=("$RAM_WORKSPACE"/*)
+            shopt -u nullglob dotglob
+            if [ ${#items[@]} -eq 0 ]; then
+                warn "Sync reported success but RAM workspace is empty: $RAM_WORKSPACE"
+                info "If your repos are under ~/git, ensure GIT_DIR is set correctly (e.g., export GIT_DIR=~/git)"
+            fi
+        fi
         return 0
     else
         warn "✗ Failed to sync projects, but continuing..."

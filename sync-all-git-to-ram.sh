@@ -7,9 +7,22 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# By default, use ./git relative to this script.
-GIT_DIR="${GIT_DIR:-$SCRIPT_DIR/git}"
+# Source and destination
+#
+# This repo's README suggests cloning under ~/git, so prefer that by default.
+# You can override with:
+#   GIT_DIR=/path/to/repos RAM_WORKSPACE=/tmp/dev-workspace ./sync-all-git-to-ram.sh
 RAM_WORKSPACE="${RAM_WORKSPACE:-/tmp/dev-workspace}"
+
+GIT_DIR="${GIT_DIR:-}"
+if [ -z "$GIT_DIR" ]; then
+    if [ -d "$HOME/git" ]; then
+        GIT_DIR="$HOME/git"
+    else
+        # Backwards-compatible fallback (older docs referenced ./git relative to this script)
+        GIT_DIR="$SCRIPT_DIR/git"
+    fi
+fi
 
 sync_path() {
     local src_path="$1"
@@ -31,6 +44,7 @@ sync_path() {
 main() {
     if [ ! -d "$GIT_DIR" ]; then
         echo "ERROR: Source directory not found: $GIT_DIR" >&2
+        echo "Hint: set GIT_DIR to the directory that contains your repositories (commonly: ~/git)" >&2
         exit 1
     fi
 
@@ -57,14 +71,14 @@ main() {
 if [ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ]; then
     echo "Usage: $0 [--dry-run]"
     echo ""
-    echo "Syncs everything in the root of ./git (relative to this script) to the RAM workspace"
+    echo "Syncs everything in the root of GIT_DIR to the RAM workspace"
     echo ""
     echo "Options:"
     echo "  --dry-run    Show what would be synced without actually doing it"
     echo "  --help       Show this help message"
     echo ""
     echo "Environment overrides:"
-    echo "  GIT_DIR=...        Source directory (default: ./git relative to this script)"
+    echo "  GIT_DIR=...        Source directory (default: ~/git if it exists; else: ./git relative to this script)"
     echo "  RAM_WORKSPACE=...  Destination directory (default: /tmp/dev-workspace)"
     exit 0
 fi
