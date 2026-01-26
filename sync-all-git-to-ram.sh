@@ -1,13 +1,18 @@
 #!/bin/bash
 
 # sync-all-git-to-ram.sh
-# Syncs all git repositories from ~/git to tmpfs for faster development
+# Syncs everything under ~/git (top-level entries) to tmpfs for faster development
 
 set -e
 
-GIT_DIR="$HOME/git"
-RAM_WORKSPACE="/tmp/dev-workspace"
-SYNC_LOG="$HOME/git-sync.log"
+GIT_DIR="${GIT_DIR:-$HOME/git}"
+RAM_WORKSPACE="${RAM_WORKSPACE:-/tmp/dev-workspace}"
+SYNC_LOG="${SYNC_LOG:-$HOME/git-sync.log}"
+
+# Optional extra directory to sync (requested: ../peons relative to GIT_DIR)
+# Use dirname to avoid depending on $GIT_DIR existing at shell-parse time.
+PEONS_DIR_DEFAULT="$(dirname "$GIT_DIR")/peons"
+PEONS_DIR="${PEONS_DIR:-$PEONS_DIR_DEFAULT}"
 
 # Colors for output
 RED='\033[0;31m'
@@ -28,92 +33,83 @@ error() {
 }
 
 check_tmpfs_space() {
-    local available=$(df -BG "$RAM_WORKSPACE" 2>/dev/null | awk 'NR==2 {print $4}' | sed 's/G//')
+    # Ensure workspace exists so df works even when not mounted as tmpfs
+    mkdir -p "$RAM_WORKSPACE"
+
+    local available
+    available=$(df -BG "$RAM_WORKSPACE" 2>/dev/null | awk 'NR==2 {print $4}' | sed 's/G//')
+    if [ -z "$available" ]; then
+        warn "Could not determine available space for $RAM_WORKSPACE; skipping space check"
+        return 0
+    fi
+
     local total_size=0
-    
-    for dir in "$GIT_DIR"/*; do
-        if [ -d "$dir" ]; then
-            local size=$(du -sm "$dir" 2>/dev/null | cut -f1)
+    local path
+
+    for path in "$GIT_DIR"/*; do
+        if [ -e "$path" ]; then
+            local size
+            size=$(du -sm "$path" 2>/dev/null | cut -f1 || echo 0)
             total_size=$((total_size + size))
         fi
     done
-    
+
+    if [ -d "$PEONS_DIR" ]; then
+        local peons_size
+        peons_size=$(du -sm "$PEONS_DIR" 2>/dev/null | cut -f1 || echo 0)
+        total_size=$((total_size + peons_size))
+    fi
+
     local total_gb=$((total_size / 1024 + 1))
-    
+
     if [ "$total_gb" -gt "$available" ]; then
-        error "Not enough space in tmpfs. Need ${total_gb}GB, have ${available}GB available"
+        error "Not enough space. Need ~${total_gb}GB, have ${available}GB available at $RAM_WORKSPACE"
         return 1
     fi
-    
-    log "Space check passed: ${total_gb}GB needed, ${available}GB available"
+
+    log "Space check passed: ~${total_gb}GB needed, ${available}GB available"
     return 0
 }
 
-sync_repo() {
-    local repo_path="$1"
-    local repo_name=$(basename "$repo_path")
-    local dest_path="$RAM_WORKSPACE/$repo_name"
-    
-    # Special handling for non-git directories (teams and streetlight)
-    if [ "$repo_name" = "teams" ] || [ "$repo_name" = "streetlight" ]; then
-        log "Syncing $repo_name folder (non-git directory) to RAM..."
-        
-        # Remove existing if present
-        if [ -d "$dest_path" ]; then
-            rm -rf "$dest_path"
-        fi
-        
-        # Copy to RAM
-        cp -r "$repo_path" "$dest_path"
-        
-        # Check if sync was successful
-        if [ -d "$dest_path" ]; then
-            log "✓ $repo_name folder synced successfully"
-            return 0
-        else
-            error "✗ Failed to sync $repo_name folder"
-            return 1
-        fi
-    fi
-    
-    if [ ! -d "$repo_path/.git" ]; then
-        warn "Skipping $repo_name - not a git repository"
-        return 0
-    fi
-    
-    log "Syncing $repo_name to RAM..."
-    
-    # Remove existing if present
-    if [ -d "$dest_path" ]; then
+sync_path() {
+    local src_path="$1"
+    local name
+    name=$(basename "$src_path")
+    local dest_path="$RAM_WORKSPACE/$name"
+
+    log "Syncing $name to RAM..."
+
+    # Remove existing destination (file/dir/symlink)
+    if [ -e "$dest_path" ] || [ -L "$dest_path" ]; then
         rm -rf "$dest_path"
     fi
-    
-    # Copy to RAM
-    cp -r "$repo_path" "$dest_path"
-    
-    # Check if sync was successful
-    if [ -d "$dest_path/.git" ]; then
-        log "✓ $repo_name synced successfully"
+
+    # Copy into RAM workspace, preserving attributes/symlinks
+    cp -a "$src_path" "$RAM_WORKSPACE/"
+
+    if [ -e "$dest_path" ] || [ -L "$dest_path" ]; then
+        log "✓ $name synced successfully"
         return 0
-    else
-        error "✗ Failed to sync $repo_name"
-        return 1
     fi
+
+    error "✗ Failed to sync $name"
+    return 1
 }
 
 main() {
-    log "Starting git repositories sync to RAM workspace"
-    
-    # Check if tmpfs is mounted
-    if ! mountpoint -q "$RAM_WORKSPACE"; then
-        error "RAM workspace not mounted at $RAM_WORKSPACE"
-        exit 1
-    fi
-    
+    log "Starting sync to RAM workspace"
+
     # Check if git directory exists
     if [ ! -d "$GIT_DIR" ]; then
-        error "Git directory not found: $GIT_DIR"
+        error "Source directory not found: $GIT_DIR"
         exit 1
+    fi
+
+    mkdir -p "$RAM_WORKSPACE"
+
+    # Warn (but do not fail) if the workspace is not a tmpfs mount
+    if ! mountpoint -q "$RAM_WORKSPACE"; then
+        warn "$RAM_WORKSPACE is not a mountpoint (tmpfs not detected). Continuing anyway."
     fi
     
     # Check available space
@@ -124,17 +120,27 @@ main() {
     local success_count=0
     local total_count=0
     
-    # Sync all directories in git folder
-    for repo_path in "$GIT_DIR"/*; do
-        if [ -d "$repo_path" ]; then
+    # Sync everything in the root of the git folder (dirs *and* files)
+    for path in "$GIT_DIR"/*; do
+        if [ -e "$path" ]; then
             total_count=$((total_count + 1))
-            if sync_repo "$repo_path"; then
+            if sync_path "$path"; then
                 success_count=$((success_count + 1))
             fi
         fi
     done
-    
-    log "Sync completed: $success_count/$total_count repositories synced"
+
+    # Also sync ../peons if it exists (relative to $GIT_DIR)
+    if [ -d "$PEONS_DIR" ]; then
+        total_count=$((total_count + 1))
+        if sync_path "$PEONS_DIR"; then
+            success_count=$((success_count + 1))
+        fi
+    else
+        warn "Optional extra directory not found (skipping): $PEONS_DIR"
+    fi
+
+    log "Sync completed: $success_count/$total_count items synced"
     
     if [ "$success_count" -gt 0 ]; then
         log "RAM workspace ready at: $RAM_WORKSPACE"
@@ -147,11 +153,18 @@ main() {
 if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     echo "Usage: $0 [--dry-run]"
     echo ""
-    echo "Syncs all git repositories from ~/git to tmpfs RAM workspace"
+    echo "Syncs everything in the root of ~/git to the RAM workspace"
+    echo "Also syncs ../peons (relative to the git dir) when it exists"
     echo ""
     echo "Options:"
     echo "  --dry-run    Show what would be synced without actually doing it"
     echo "  --help       Show this help message"
+    echo ""
+    echo "Environment overrides:"
+    echo "  GIT_DIR=...        Source directory (default: ~/git)"
+    echo "  RAM_WORKSPACE=...  Destination directory (default: /tmp/dev-workspace)"
+    echo "  PEONS_DIR=...      Extra directory (default: ../peons relative to GIT_DIR)"
+    echo "  SYNC_LOG=...       Log file path (default: ~/git-sync.log)"
     echo ""
     echo "Log file: $SYNC_LOG"
     exit 0
@@ -160,18 +173,18 @@ fi
 # Dry run mode
 if [ "$1" = "--dry-run" ]; then
     log "DRY RUN - showing what would be synced:"
-    for repo_path in "$GIT_DIR"/*; do
-        if [ -d "$repo_path" ]; then
-            repo_name=$(basename "$repo_path")
-            if [ "$repo_name" = "teams" ] || [ "$repo_name" = "streetlight" ]; then
-                echo "  ✓ $repo_name (non-git directory) ($(du -sh "$repo_path" | cut -f1))"
-            elif [ -d "$repo_path/.git" ]; then
-                echo "  ✓ $repo_name ($(du -sh "$repo_path" | cut -f1))"
-            else
-                echo "  ✗ $repo_name (not a git repo)"
-            fi
+    for path in "$GIT_DIR"/*; do
+        if [ -e "$path" ]; then
+            name=$(basename "$path")
+            echo "  ✓ $name ($(du -sh "$path" 2>/dev/null | cut -f1 || echo "unknown"))"
         fi
     done
+
+    if [ -d "$PEONS_DIR" ]; then
+        echo "  ✓ $(basename "$PEONS_DIR") ($(du -sh "$PEONS_DIR" 2>/dev/null | cut -f1 || echo "unknown"))"
+    else
+        echo "  ✗ $(basename "$PEONS_DIR") (missing: $PEONS_DIR)"
+    fi
     exit 0
 fi
 

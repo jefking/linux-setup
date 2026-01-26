@@ -157,13 +157,13 @@ sync_repositories() {
         return 0
     fi
 
-    info "Syncing git repositories to RAM workspace..."
+    info "Syncing ~/git (and optional ../peons) to RAM workspace..."
 
     if [ -x "$SYNC_SCRIPT" ] && "$SYNC_SCRIPT"; then
-        info "✓ Git repositories synced successfully"
+        info "✓ Projects synced successfully"
         return 0
     else
-        warn "✗ Failed to sync git repositories, but continuing..."
+        warn "✗ Failed to sync projects, but continuing..."
         info "You can manually sync repositories later"
         return 0  # Don't fail the entire startup
     fi
@@ -382,7 +382,7 @@ if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     echo "Usage: $0 [options]"
     echo ""
     echo "Development environment startup script"
-    echo "Syncs all git repositories to RAM workspace and opens development terminal"
+    echo "Syncs ~/git into the RAM workspace and opens a development terminal"
     echo ""
     echo "Options:"
     echo "  --help       Show this help message"
