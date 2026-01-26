@@ -54,7 +54,7 @@ main() {
 }
 
 # Show usage if help requested
-if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+if [ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ]; then
     echo "Usage: $0 [--dry-run]"
     echo ""
     echo "Syncs everything in the root of ./git (relative to this script) to the RAM workspace"
@@ -70,7 +70,7 @@ if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
 fi
 
 # Dry run mode
-if [ "$1" = "--dry-run" ]; then
+if [ "${1:-}" = "--dry-run" ]; then
     echo "DRY RUN - showing what would be synced:"
     for path in "$GIT_DIR"/*; do
         if [ -e "$path" ]; then
