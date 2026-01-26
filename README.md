@@ -37,8 +37,15 @@ chmod +x *.sh
 ./system-performance-setup.sh
 ./wifi7-optimization.sh
 ./memory-optimization-64gb.sh
-./ac-performance-boost.sh
+	./ac-performance-boost.sh
+	# For the highest-risk "max performance" knobs (may hurt suspend/resume):
+	./ac-performance-boost.sh --aggressive
 ```
+
+	**Note on suspend/resume (s2idle):** Some of the most aggressive performance tweaks (disabling CPU idle,
+	forcing PCI runtime PM "on", disabling USB autosuspend, forcing PCIe ASPM policy) can make wake-from-sleep
+	less reliable on some AMD laptops. `ac-performance-boost.sh` now defaults to a suspend-safe mode; use
+	`--aggressive` only if you accept the tradeoffs.
 
 **AMD + WiFi 7 optimized setup includes:**
 1. **16GB RAM workspace + 8GB build cache** (optimized for 64GB RAM)
