@@ -1,0 +1,407 @@
+[check] GIT_DIR=/home/jef/git
+[check] RAM_WORKSPACE=/tmp/dev-workspace
+[check] mountpoint?
+yes
+[check] df:
+Filesystem      Size  Used Avail Use% Mounted on
+tmpfs            12G  4.1G  8.0G  34% /tmp/dev-workspace
+[sync] ./sync-all-git-to-ram.sh --clean
+Cleaning RAM workspace: /tmp/dev-workspace
+[sync] Source (GIT_DIR): /home/jef/git
+[sync] Destination (RAM_WORKSPACE): /tmp/dev-workspace
+[sync] Layout: preserve top-level repos and one-level company folders
+Syncing app...
+Syncing cloud...
+Syncing homepage...
+Syncing slav...
+Syncing image-dup...
+Syncing image-find...
+Syncing image-rando...
+Syncing image-review...
+Syncing image-sort...
+Syncing jefkingme...
+Syncing linux-setup...
+Syncing proposals...
+Syncing sg-scratch...
+Syncing ai-friends...
+Syncing docs...
+Syncing email...
+Syncing moltbot...
+Syncing moneywell...
+Syncing vibewave-events...
+Syncing vibe-wave-live...
+Syncing website...
+Sync completed: 21 repos synced, 2 skipped (from 23 dirs checked)
+RAM workspace: /tmp/dev-workspace
+[verify] start
+FAIL: dest is not a git worktree: /tmp/dev-workspace/byework/app  (src: /home/jef/git/byework/app)
+  dest .git:
+total 60
+drwxrwxr-x   8 jef jef   320 Jan 28 07:02 .
+drwxrwxr-x   7 jef jef   300 Jan 28 07:05 ..
+drwxrwxr-x   2 jef jef    40 Jan 26 13:29 branches
+-rw-rw-r--   1 jef jef     4 Jan 27 21:21 COMMIT_EDITMSG
+-rw-rw-r--   1 jef jef   307 Jan 27 15:06 config
+-rw-rw-r--   1 jef jef    73 Jan 26 13:29 description
+-rw-rw-r--   1 jef jef    82 Jan 28 07:02 FETCH_HEAD
+-rw-rw-r--   1 jef jef    21 Jan 28 07:02 HEAD
+drwxrwxr-x   2 jef jef   320 Jan 26 13:29 hooks
+-rw-rw-r--   1 jef jef 29210 Jan 28 07:02 index
+drwxrwxr-x   2 jef jef    60 Jan 26 13:29 info
+drwxrwxr-x   3 jef jef    80 Jan 26 13:29 logs
+drwxrwxr-x 191 jef jef  3820 Jan 28 07:02 objects
+-rw-rw-r--   1 jef jef    41 Jan 28 07:02 ORIG_HEAD
+-rw-rw-r--   1 jef jef   112 Jan 26 13:29 packed-refs
+drwxrwxr-x   5 jef jef   100 Jan 26 13:29 refs
+FAIL: dest is not a git worktree: /tmp/dev-workspace/byework/cloud  (src: /home/jef/git/byework/cloud)
+  dest .git:
+total 44
+drwxrwxr-x  8 jef jef   320 Jan 28 07:02 .
+drwxrwxr-x  6 jef jef   320 Jan 27 20:28 ..
+drwxrwxr-x  2 jef jef    40 Jan 26 13:29 branches
+-rw-rw-r--  1 jef jef     8 Jan 27 21:14 COMMIT_EDITMSG
+-rw-rw-r--  1 jef jef   403 Jan 26 21:04 config
+-rw-rw-r--  1 jef jef    73 Jan 26 13:29 description
+-rw-rw-r--  1 jef jef   194 Jan 28 07:02 FETCH_HEAD
+-rw-rw-r--  1 jef jef    21 Jan 28 07:02 HEAD
+drwxrwxr-x  2 jef jef   320 Jan 26 13:29 hooks
+-rw-rw-r--  1 jef jef 15212 Jan 28 07:02 index
+drwxrwxr-x  2 jef jef    60 Jan 26 13:29 info
+drwxrwxr-x  3 jef jef    80 Jan 26 13:29 logs
+drwxrwxr-x 92 jef jef  1840 Jan 28 07:02 objects
+-rw-rw-r--  1 jef jef    41 Jan 27 21:14 ORIG_HEAD
+-rw-rw-r--  1 jef jef   112 Jan 26 13:29 packed-refs
+drwxrwxr-x  5 jef jef   100 Jan 26 13:29 refs
+FAIL: dest is not a git worktree: /tmp/dev-workspace/byework/homepage  (src: /home/jef/git/byework/homepage)
+  dest .git:
+total 32
+drwxrwxr-x   8 jef jef  320 Jan 28 08:20 .
+drwxrwxr-x   9 jef jef  400 Jan 28 08:15 ..
+drwxrwxr-x   2 jef jef   40 Jan 27 09:02 branches
+-rw-rw-r--   1 jef jef    9 Jan 28 08:20 COMMIT_EDITMSG
+-rw-rw-r--   1 jef jef  289 Jan 27 09:03 config
+-rw-rw-r--   1 jef jef   73 Jan 27 09:02 description
+-rw-rw-r--   1 jef jef   87 Jan 28 07:02 FETCH_HEAD
+-rw-rw-r--   1 jef jef   21 Jan 28 07:02 HEAD
+drwxrwxr-x   2 jef jef  320 Jan 27 09:02 hooks
+-rw-rw-r--   1 jef jef 2416 Jan 28 08:20 index
+drwxrwxr-x   2 jef jef   60 Jan 27 09:02 info
+drwxrwxr-x   3 jef jef   80 Jan 27 09:02 logs
+drwxrwxr-x 107 jef jef 2140 Jan 28 08:20 objects
+-rw-rw-r--   1 jef jef   41 Jan 28 07:02 ORIG_HEAD
+-rw-rw-r--   1 jef jef  112 Jan 27 09:02 packed-refs
+drwxrwxr-x   5 jef jef  100 Jan 27 09:02 refs
+FAIL: dest is not a git worktree: /tmp/dev-workspace/byework/slav  (src: /home/jef/git/byework/slav)
+  dest .git:
+total 60
+drwxrwxr-x  8 jef jef   260 Jan 26 19:23 .
+drwxrwxr-x 10 jef jef   420 Jan 26 19:22 ..
+drwxrwxr-x  2 jef jef    40 Jan 26 19:22 branches
+-rw-rw-r--  1 jef jef   287 Jan 26 19:23 config
+-rw-rw-r--  1 jef jef    73 Jan 26 19:22 description
+-rw-rw-r--  1 jef jef    21 Jan 26 19:22 HEAD
+drwxrwxr-x  2 jef jef   320 Jan 26 19:22 hooks
+-rw-rw-r--  1 jef jef 42483 Jan 26 19:22 index
+drwxrwxr-x  2 jef jef    60 Jan 26 19:22 info
+drwxrwxr-x  3 jef jef    80 Jan 26 19:22 logs
+drwxrwxr-x  4 jef jef    80 Jan 26 19:22 objects
+-rw-rw-r--  1 jef jef   112 Jan 26 19:22 packed-refs
+drwxrwxr-x  5 jef jef   100 Jan 26 19:22 refs
+FAIL: dest is not a git worktree: /tmp/dev-workspace/image-dup  (src: /home/jef/git/image-dup)
+  dest .git:
+total 20
+drwxrwxr-x  8 jef jef 260 Jan 18 11:45 .
+drwxrwxr-x  5 jef jef 180 Jan 18 11:21 ..
+drwxrwxr-x  2 jef jef  40 Jan 17 17:49 branches
+-rw-rw-r--  1 jef jef   3 Jan 18 11:45 COMMIT_EDITMSG
+-rw-rw-r--  1 jef jef 257 Jan 17 17:49 config
+-rw-rw-r--  1 jef jef  73 Jan 17 17:49 description
+-rw-rw-r--  1 jef jef  21 Jan 17 17:49 HEAD
+drwxrwxr-x  2 jef jef 320 Jan 17 17:49 hooks
+-rw-rw-r--  1 jef jef 876 Jan 18 11:45 index
+drwxrwxr-x  2 jef jef  60 Jan 17 17:49 info
+drwxrwxr-x  3 jef jef  80 Jan 17 17:49 logs
+drwxrwxr-x 19 jef jef 380 Jan 18 11:45 objects
+drwxrwxr-x  5 jef jef 100 Jan 17 17:49 refs
+FAIL: dest is not a git worktree: /tmp/dev-workspace/image-find  (src: /home/jef/git/image-find)
+  dest .git:
+total 32
+drwxrwxr-x  8 jef jef 320 Jan 18 14:41 .
+drwxrwxr-x  5 jef jef 180 Jan 16 19:40 ..
+drwxrwxr-x  2 jef jef  40 Jan 16 10:59 branches
+-rw-rw-r--  1 jef jef   5 Jan 16 21:58 COMMIT_EDITMSG
+-rw-rw-r--  1 jef jef 291 Jan 16 10:59 config
+-rw-rw-r--  1 jef jef  73 Jan 16 10:59 description
+-rw-rw-r--  1 jef jef  89 Jan 18 14:41 FETCH_HEAD
+-rw-rw-r--  1 jef jef  21 Jan 16 10:59 HEAD
+drwxrwxr-x  2 jef jef 320 Jan 16 10:59 hooks
+-rw-rw-r--  1 jef jef 485 Jan 16 21:58 index
+drwxrwxr-x  2 jef jef  60 Jan 16 10:59 info
+drwxrwxr-x  3 jef jef  80 Jan 16 10:59 logs
+drwxrwxr-x 48 jef jef 960 Jan 18 14:41 objects
+-rw-rw-r--  1 jef jef  41 Jan 18 14:41 ORIG_HEAD
+-rw-rw-r--  1 jef jef 112 Jan 16 10:59 packed-refs
+drwxrwxr-x  5 jef jef 100 Jan 16 10:59 refs
+FAIL: dest is not a git worktree: /tmp/dev-workspace/image-rando  (src: /home/jef/git/image-rando)
+  dest .git:
+total 32
+drwxrwxr-x   8 jef jef  320 Jan 23 16:54 .
+drwxrwxr-x   5 jef jef  200 Jan 20 20:29 ..
+drwxrwxr-x   2 jef jef   40 Jan 20 20:19 branches
+-rw-rw-r--   1 jef jef    7 Jan 20 20:29 COMMIT_EDITMSG
+-rw-rw-r--   1 jef jef  292 Jan 20 20:20 config
+-rw-rw-r--   1 jef jef   73 Jan 20 20:19 description
+-rw-rw-r--   1 jef jef   90 Jan 23 16:54 FETCH_HEAD
+-rw-rw-r--   1 jef jef   21 Jan 20 20:19 HEAD
+drwxrwxr-x   2 jef jef  320 Jan 20 20:19 hooks
+-rw-rw-r--   1 jef jef  557 Jan 20 20:29 index
+drwxrwxr-x   2 jef jef   60 Jan 20 20:19 info
+drwxrwxr-x   3 jef jef   80 Jan 20 20:19 logs
+drwxrwxr-x 120 jef jef 2400 Jan 23 16:54 objects
+-rw-rw-r--   1 jef jef   41 Jan 23 16:54 ORIG_HEAD
+-rw-rw-r--   1 jef jef  112 Jan 20 20:19 packed-refs
+drwxrwxr-x   5 jef jef  100 Jan 20 20:19 refs
+FAIL: dest is not a git worktree: /tmp/dev-workspace/image-review  (src: /home/jef/git/image-review)
+  dest .git:
+total 32
+drwxrwxr-x  8 jef jef  320 Jan 26 14:02 .
+drwxrwxr-x  5 jef jef  200 Jan 26 14:02 ..
+drwxrwxr-x  2 jef jef   40 Dec  7 19:34 branches
+-rw-rw-r--  1 jef jef  205 Jan 16 08:41 COMMIT_EDITMSG
+-rw-rw-r--  1 jef jef  293 Jan  6 21:11 config
+-rw-rw-r--  1 jef jef   73 Dec  7 19:34 description
+-rw-rw-r--  1 jef jef   91 Jan 26 14:02 FETCH_HEAD
+-rw-rw-r--  1 jef jef   21 Jan 26 14:02 HEAD
+drwxrwxr-x  2 jef jef  320 Dec  7 19:34 hooks
+-rw-rw-r--  1 jef jef  756 Jan 26 14:02 index
+drwxrwxr-x  2 jef jef   60 Dec  7 19:34 info
+drwxrwxr-x  3 jef jef   80 Dec  7 19:35 logs
+drwxrwxr-x 51 jef jef 1020 Jan 26 14:02 objects
+-rw-rw-r--  1 jef jef   41 Jan 26 14:02 ORIG_HEAD
+-rw-rw-r--  1 jef jef  112 Dec  7 19:35 packed-refs
+drwxrwxr-x  5 jef jef  100 Dec  7 19:35 refs
+FAIL: dest is not a git worktree: /tmp/dev-workspace/image-sort  (src: /home/jef/git/image-sort)
+  dest .git:
+total 24
+drwxrwxr-x  8 jef jef  280 Jan 17 19:33 .
+drwxrwxr-x  5 jef jef  160 Jan 17 18:18 ..
+drwxrwxr-x  2 jef jef   40 Jan 17 18:01 branches
+-rw-rw-r--  1 jef jef    4 Jan 17 19:33 COMMIT_EDITMSG
+-rw-rw-r--  1 jef jef  291 Jan 17 18:01 config
+-rw-rw-r--  1 jef jef   73 Jan 17 18:01 description
+-rw-rw-r--  1 jef jef   21 Jan 17 18:01 HEAD
+drwxrwxr-x  2 jef jef  320 Jan 17 18:01 hooks
+-rw-rw-r--  1 jef jef 1448 Jan 17 19:33 index
+drwxrwxr-x  2 jef jef   60 Jan 17 18:01 info
+drwxrwxr-x  3 jef jef   80 Jan 17 18:01 logs
+drwxrwxr-x 38 jef jef  760 Jan 17 19:33 objects
+-rw-rw-r--  1 jef jef  112 Jan 17 18:01 packed-refs
+drwxrwxr-x  5 jef jef  100 Jan 17 18:01 refs
+FAIL: dest is not a git worktree: /tmp/dev-workspace/jefkingme  (src: /home/jef/git/jefkingme)
+  dest .git:
+total 24
+drwxrwxr-x 8 jef jef 280 Nov  2 14:34 .
+drwxrwxr-x 3 jef jef 220 Nov  2 14:32 ..
+drwxrwxr-x 2 jef jef  40 Nov  2 14:32 branches
+-rw-rw-r-- 1 jef jef   7 Nov  2 14:34 COMMIT_EDITMSG
+-rw-rw-r-- 1 jef jef 296 Nov  2 14:33 config
+-rw-rw-r-- 1 jef jef  73 Nov  2 14:32 description
+-rw-rw-r-- 1 jef jef  23 Nov  2 14:32 HEAD
+drwxrwxr-x 2 jef jef 320 Nov  2 14:32 hooks
+-rw-rw-r-- 1 jef jef 681 Nov  2 14:34 index
+drwxrwxr-x 2 jef jef  60 Nov  2 14:32 info
+drwxrwxr-x 3 jef jef  80 Nov  2 14:32 logs
+drwxrwxr-x 7 jef jef 140 Nov  2 14:34 objects
+-rw-rw-r-- 1 jef jef 114 Nov  2 14:32 packed-refs
+drwxrwxr-x 5 jef jef 100 Nov  2 14:32 refs
+FAIL: dest is not a git worktree: /tmp/dev-workspace/linux-setup  (src: /home/jef/git/linux-setup)
+  dest .git:
+total 32
+drwxrwxr-x  8 jef jef  320 Jan 28 07:44 .
+drwxrwxr-x  3 jef jef  620 Jan 28 08:20 ..
+drwxrwxr-x  2 jef jef   40 Sep 16 11:37 branches
+-rw-rw-r--  1 jef jef    7 Jan 28 07:44 COMMIT_EDITMSG
+-rw-rw-r--  1 jef jef  410 Sep 16 20:34 config
+-rw-rw-r--  1 jef jef   73 Sep 16 11:37 description
+-rw-rw-r--  1 jef jef  223 Jan 26 15:18 FETCH_HEAD
+-rw-rw-r--  1 jef jef   21 Jan 26 15:18 HEAD
+drwxrwxr-x  2 jef jef  320 Sep 16 11:37 hooks
+-rw-rw-r--  1 jef jef 2410 Jan 28 07:44 index
+drwxrwxr-x  2 jef jef   60 Sep 16 11:37 info
+drwxrwxr-x  3 jef jef   80 Sep 16 11:37 logs
+drwxrwxr-x 68 jef jef 1360 Jan 28 07:44 objects
+-rw-rw-r--  1 jef jef   41 Jan 22 20:42 ORIG_HEAD
+-rw-rw-r--  1 jef jef  112 Sep 16 11:37 packed-refs
+drwxrwxr-x  5 jef jef  100 Sep 16 11:37 refs
+FAIL: dest is not a git worktree: /tmp/dev-workspace/skygraph/proposals  (src: /home/jef/git/skygraph/proposals)
+  dest .git:
+total 24
+drwxrwxr-x 8 jef jef  280 Oct 21 21:25 .
+drwxrwxr-x 3 jef jef  280 Oct 21 21:00 ..
+drwxrwxr-x 2 jef jef   40 Oct 21 21:00 branches
+-rw-rw-r-- 1 jef jef   11 Oct 21 21:24 COMMIT_EDITMSG
+-rw-rw-r-- 1 jef jef  431 Oct 21 21:25 config
+-rw-rw-r-- 1 jef jef   73 Oct 21 21:00 description
+-rw-rw-r-- 1 jef jef   44 Oct 21 21:09 HEAD
+drwxrwxr-x 2 jef jef  320 Oct 21 21:00 hooks
+-rw-rw-r-- 1 jef jef 1058 Oct 21 21:24 index
+drwxrwxr-x 2 jef jef   60 Oct 21 21:00 info
+drwxrwxr-x 3 jef jef   80 Oct 21 21:00 logs
+drwxrwxr-x 7 jef jef  140 Oct 21 21:24 objects
+-rw-rw-r-- 1 jef jef  112 Oct 21 21:00 packed-refs
+drwxrwxr-x 5 jef jef  100 Oct 21 21:00 refs
+FAIL: dest is not a git worktree: /tmp/dev-workspace/skygraph/sg-scratch  (src: /home/jef/git/skygraph/sg-scratch)
+  dest .git:
+total 144
+drwxrwxr-x  8 jef jef    260 Nov 22 14:56 .
+drwxrwxr-x 12 jef jef    280 Nov 22 14:26 ..
+drwxrwxr-x  2 jef jef     40 Nov 22 14:26 branches
+-rw-rw-r--  1 jef jef    295 Nov 22 14:56 config
+-rw-rw-r--  1 jef jef     73 Nov 22 14:26 description
+-rw-rw-r--  1 jef jef     21 Nov 22 14:26 HEAD
+drwxrwxr-x  2 jef jef    320 Nov 22 14:26 hooks
+-rw-rw-r--  1 jef jef 127093 Nov 22 14:26 index
+drwxrwxr-x  2 jef jef     60 Nov 22 14:26 info
+drwxrwxr-x  3 jef jef     80 Nov 22 14:26 logs
+drwxrwxr-x  4 jef jef     80 Nov 22 14:26 objects
+-rw-rw-r--  1 jef jef    458 Nov 22 14:26 packed-refs
+drwxrwxr-x  5 jef jef    100 Nov 22 14:26 refs
+FAIL: dest is not a git worktree: /tmp/dev-workspace/streetlight/ai-friends  (src: /home/jef/git/streetlight/ai-friends)
+  dest .git:
+total 24
+drwxrwxr-x 8 jef jef  260 Nov  2 08:31 .
+drwxrwxr-x 7 jef jef  160 Nov  2 08:31 ..
+drwxrwxr-x 2 jef jef   40 Nov  2 08:31 branches
+-rw-rw-r-- 1 jef jef  265 Nov  2 08:31 config
+-rw-rw-r-- 1 jef jef   73 Nov  2 08:31 description
+-rw-rw-r-- 1 jef jef   21 Nov  2 08:31 HEAD
+drwxrwxr-x 2 jef jef  320 Nov  2 08:31 hooks
+-rw-rw-r-- 1 jef jef 5341 Nov  2 08:31 index
+drwxrwxr-x 2 jef jef   60 Nov  2 08:31 info
+drwxrwxr-x 3 jef jef   80 Nov  2 08:31 logs
+drwxrwxr-x 4 jef jef   80 Nov  2 08:31 objects
+-rw-rw-r-- 1 jef jef  112 Nov  2 08:31 packed-refs
+drwxrwxr-x 5 jef jef  100 Nov  2 08:31 refs
+FAIL: dest is not a git worktree: /tmp/dev-workspace/streetlight/docs  (src: /home/jef/git/streetlight/docs)
+  dest .git:
+total 20
+drwxrwxr-x 8 jef jef 260 Nov  2 08:31 .
+drwxrwxr-x 5 jef jef 120 Nov  2 08:31 ..
+drwxrwxr-x 2 jef jef  40 Nov  2 08:31 branches
+-rw-rw-r-- 1 jef jef 259 Nov  2 08:31 config
+-rw-rw-r-- 1 jef jef  73 Nov  2 08:31 description
+-rw-rw-r-- 1 jef jef  21 Nov  2 08:31 HEAD
+drwxrwxr-x 2 jef jef 320 Nov  2 08:31 hooks
+-rw-rw-r-- 1 jef jef 561 Nov  2 08:31 index
+drwxrwxr-x 2 jef jef  60 Nov  2 08:31 info
+drwxrwxr-x 3 jef jef  80 Nov  2 08:31 logs
+drwxrwxr-x 4 jef jef  80 Nov  2 08:31 objects
+-rw-rw-r-- 1 jef jef 112 Nov  2 08:31 packed-refs
+drwxrwxr-x 5 jef jef 100 Nov  2 08:31 refs
+FAIL: dest is not a git worktree: /tmp/dev-workspace/streetlight/email  (src: /home/jef/git/streetlight/email)
+  dest .git:
+total 20
+drwxrwxr-x 8 jef jef 280 Jan  8 14:22 .
+drwxrwxr-x 3 jef jef  80 Jan  8 14:22 ..
+drwxrwxr-x 2 jef jef  40 Jan  8 14:21 branches
+-rw-rw-r-- 1 jef jef   7 Jan  8 14:22 COMMIT_EDITMSG
+-rw-rw-r-- 1 jef jef 260 Jan  8 14:21 config
+-rw-rw-r-- 1 jef jef  73 Jan  8 14:21 description
+-rw-rw-r-- 1 jef jef   0 Jan  8 14:22 FETCH_HEAD
+-rw-rw-r-- 1 jef jef  21 Jan  8 14:21 HEAD
+drwxrwxr-x 2 jef jef 320 Jan  8 14:21 hooks
+-rw-rw-r-- 1 jef jef 137 Jan  8 14:22 index
+drwxrwxr-x 2 jef jef  60 Jan  8 14:21 info
+drwxrwxr-x 3 jef jef  80 Jan  8 14:22 logs
+drwxrwxr-x 8 jef jef 160 Jan  8 14:22 objects
+drwxrwxr-x 5 jef jef 100 Jan  8 14:22 refs
+FAIL: dest is not a git worktree: /tmp/dev-workspace/streetlight/moltbot  (src: /home/jef/git/streetlight/moltbot)
+  dest .git:
+total 496
+drwxrwxr-x  8 jef jef    260 Jan 27 09:32 .
+drwxrwxr-x 19 jef jef   1240 Jan 27 09:32 ..
+drwxrwxr-x  2 jef jef     40 Jan 27 09:31 branches
+-rw-rw-r--  1 jef jef    262 Jan 27 09:32 config
+-rw-rw-r--  1 jef jef     73 Jan 27 09:31 description
+-rw-rw-r--  1 jef jef     21 Jan 27 09:32 HEAD
+drwxrwxr-x  2 jef jef    320 Jan 27 09:31 hooks
+-rw-rw-r--  1 jef jef 491025 Jan 27 09:32 index
+drwxrwxr-x  2 jef jef     60 Jan 27 09:31 info
+drwxrwxr-x  3 jef jef     80 Jan 27 09:32 logs
+drwxrwxr-x  4 jef jef     80 Jan 27 09:31 objects
+-rw-rw-r--  1 jef jef    112 Jan 27 09:32 packed-refs
+drwxrwxr-x  5 jef jef    100 Jan 27 09:32 refs
+FAIL: dest is not a git worktree: /tmp/dev-workspace/streetlight/moneywell  (src: /home/jef/git/streetlight/moneywell)
+  dest .git:
+total 20
+drwxrwxr-x  8 jef jef 260 Jan 26 10:49 .
+drwxrwxr-x  3 jef jef  80 Jan 26 10:05 ..
+drwxrwxr-x  2 jef jef  40 Jan 26 10:04 branches
+-rw-rw-r--  1 jef jef   7 Jan 26 10:49 COMMIT_EDITMSG
+-rw-rw-r--  1 jef jef 264 Jan 26 10:05 config
+-rw-rw-r--  1 jef jef  73 Jan 26 10:04 description
+-rw-rw-r--  1 jef jef  21 Jan 26 10:05 HEAD
+drwxrwxr-x  2 jef jef 320 Jan 26 10:04 hooks
+-rw-rw-r--  1 jef jef 145 Jan 26 10:49 index
+drwxrwxr-x  2 jef jef  60 Jan 26 10:04 info
+drwxrwxr-x  3 jef jef  80 Jan 26 10:05 logs
+drwxrwxr-x 10 jef jef 200 Jan 26 10:49 objects
+drwxrwxr-x  5 jef jef 100 Jan 26 10:05 refs
+FAIL: dest is not a git worktree: /tmp/dev-workspace/streetlight/vibewave-events  (src: /home/jef/git/streetlight/vibewave-events)
+  dest .git:
+total 32
+drwxrwxr-x   8 jef jef  320 Jan 28 07:02 .
+drwxrwxr-x   4 jef jef  220 Jan 28 07:21 ..
+drwxrwxr-x   2 jef jef   40 Jan 17 17:47 branches
+-rw-rw-r--   1 jef jef    7 Jan 27 20:48 COMMIT_EDITMSG
+-rw-rw-r--   1 jef jef  373 Jan 25 16:50 config
+-rw-rw-r--   1 jef jef   73 Jan 17 17:47 description
+-rw-rw-r--   1 jef jef  101 Jan 28 07:02 FETCH_HEAD
+-rw-rw-r--   1 jef jef   21 Jan 28 07:02 HEAD
+drwxrwxr-x   2 jef jef  320 Jan 17 17:47 hooks
+-rw-rw-r--   1 jef jef  473 Jan 28 07:02 index
+drwxrwxr-x   2 jef jef   60 Jan 17 17:47 info
+drwxrwxr-x   3 jef jef   80 Jan 17 17:48 logs
+drwxrwxr-x 118 jef jef 2360 Jan 28 07:02 objects
+-rw-rw-r--   1 jef jef   41 Jan 28 07:02 ORIG_HEAD
+-rw-rw-r--   1 jef jef  112 Jan 17 17:48 packed-refs
+drwxrwxr-x   5 jef jef  100 Jan 17 17:48 refs
+FAIL: dest is not a git worktree: /tmp/dev-workspace/streetlight/vibe-wave-live  (src: /home/jef/git/streetlight/vibe-wave-live)
+  dest .git:
+total 48
+drwxrwxr-x   8 jef jef   320 Jan 28 07:02 .
+drwxrwxr-x  17 jef jef   760 Jan 27 10:57 ..
+drwxrwxr-x   2 jef jef    40 Nov  8 21:47 branches
+-rw-rw-r--   1 jef jef    16 Jan 27 20:50 COMMIT_EDITMSG
+-rw-rw-r--   1 jef jef  2397 Jan 27 09:41 config
+-rw-rw-r--   1 jef jef    73 Nov  8 21:47 description
+-rw-rw-r--   1 jef jef  2029 Jan 28 07:02 FETCH_HEAD
+-rw-rw-r--   1 jef jef    21 Jan 28 07:02 HEAD
+drwxrwxr-x   2 jef jef   320 Nov  8 21:47 hooks
+-rw-rw-r--   1 jef jef 17953 Jan 28 07:02 index
+drwxrwxr-x   2 jef jef    60 Nov  8 21:47 info
+drwxrwxr-x   3 jef jef    80 Nov  8 21:47 logs
+drwxrwxr-x 259 jef jef  5180 Jan 28 07:02 objects
+-rw-rw-r--   1 jef jef    41 Jan 28 07:02 ORIG_HEAD
+-rw-rw-r--   1 jef jef   112 Nov  8 21:47 packed-refs
+drwxrwxr-x   5 jef jef   100 Nov  8 21:47 refs
+FAIL: dest is not a git worktree: /tmp/dev-workspace/streetlight/website  (src: /home/jef/git/streetlight/website)
+  dest .git:
+total 28
+drwxrwxr-x  8 jef jef  300 Nov  3 06:05 .
+drwxrwxr-x  8 jef jef  360 Nov  3 06:05 ..
+drwxrwxr-x  2 jef jef   40 Nov  2 08:31 branches
+-rw-rw-r--  1 jef jef  262 Nov  2 08:31 config
+-rw-rw-r--  1 jef jef   73 Nov  2 08:31 description
+-rw-rw-r--  1 jef jef   93 Nov  3 06:05 FETCH_HEAD
+-rw-rw-r--  1 jef jef   21 Nov  3 06:05 HEAD
+drwxrwxr-x  2 jef jef  320 Nov  2 08:31 hooks
+-rw-rw-r--  1 jef jef 3083 Nov  3 06:05 index
+drwxrwxr-x  2 jef jef   60 Nov  2 08:31 info
+drwxrwxr-x  3 jef jef   80 Nov  2 08:31 logs
+drwxrwxr-x 51 jef jef 1020 Nov  3 06:05 objects
+-rw-rw-r--  1 jef jef   41 Nov  3 06:05 ORIG_HEAD
+-rw-rw-r--  1 jef jef  112 Nov  2 08:31 packed-refs
+drwxrwxr-x  5 jef jef  100 Nov  2 08:31 refs
+[verify] checked 21 repos; failures: 21
+EXIT_CODE=3

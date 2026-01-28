@@ -12,15 +12,21 @@ RAM_WORKSPACE="/tmp/dev-workspace"
 STARTUP_LOG="$HOME/dev-startup.log"
 
 # Default repo root: README suggests cloning under ~/git.
-# Users can override by exporting GIT_DIR before running this script.
-GIT_DIR="${GIT_DIR:-}"
-if [ -z "$GIT_DIR" ] && [ -d "$HOME/git" ]; then
-    GIT_DIR="$HOME/git"
+# Users can override by setting DEV_GIT_DIR (preferred).
+# (We still accept GIT_DIR for backwards compatibility, but do NOT export it:
+# git reserves GIT_DIR and exporting it breaks normal git commands.)
+DEV_GIT_DIR="${DEV_GIT_DIR:-${GIT_DIR:-}}"
+if [ -z "$DEV_GIT_DIR" ] && [ -d "$HOME/git" ]; then
+    DEV_GIT_DIR="$HOME/git"
 fi
+
+# Prevent inherited git environment vars from breaking git usage in the RAM shell.
+unset GIT_DIR
+unset GIT_WORK_TREE
 
 # Export so helper scripts can see them.
 export RAM_WORKSPACE
-export GIT_DIR
+export DEV_GIT_DIR
 
 # Colors for output
 RED='\033[0;31m'
@@ -168,12 +174,12 @@ sync_repositories() {
         return 0
     fi
 
-    info "Syncing repositories from: ${GIT_DIR:-<unset>}"
+    info "Syncing repositories from: ${DEV_GIT_DIR:-<unset>}"
     info "Destination RAM workspace: $RAM_WORKSPACE"
 
     # Clean RAM workspace first to avoid stale non-repo directories from previous runs.
     # NOTE: This will remove everything under $RAM_WORKSPACE.
-    if [ -x "$SYNC_SCRIPT" ] && "$SYNC_SCRIPT" --clean; then
+    if [ -x "$SYNC_SCRIPT" ] && DEV_GIT_DIR="$DEV_GIT_DIR" RAM_WORKSPACE="$RAM_WORKSPACE" "$SYNC_SCRIPT" --clean; then
         info "✓ Projects synced successfully"
 
         # Warn if nothing actually ended up in the RAM workspace
@@ -183,7 +189,7 @@ sync_repositories() {
             shopt -u nullglob dotglob
             if [ ${#items[@]} -eq 0 ]; then
                 warn "Sync reported success but RAM workspace is empty: $RAM_WORKSPACE"
-                info "If your repos are under ~/git, ensure GIT_DIR is set correctly (e.g., export GIT_DIR=~/git)"
+                info "If your repos are under ~/git, ensure DEV_GIT_DIR is set correctly (e.g., export DEV_GIT_DIR=~/git)"
             fi
         fi
         return 0
@@ -396,7 +402,12 @@ main() {
     echo ""
     
     # Launch bash with custom environment
-    exec bash --rcfile <(cat ~/.bashrc; echo "cd '$RAM_WORKSPACE'"; echo "export PS1='\[\033[1;32m\][RAM-DEV]\[\033[0m\] \[\033[1;34m\]\w\[\033[0m\]$ '")
+    exec bash --rcfile <(
+        cat ~/.bashrc
+        echo "unset GIT_DIR GIT_WORK_TREE"
+        echo "cd '$RAM_WORKSPACE'"
+        echo "export PS1='\[\033[1;32m\][RAM-DEV]\[\033[0m\] \[\033[1;34m\]\w\[\033[0m\]$ '"
+    )
 }
 
 # Handle script interruption

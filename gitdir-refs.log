@@ -1,0 +1,30 @@
+./validate-git.log:1:[check] GIT_DIR=/home/jef/git
+./validate-git.log:10:[sync] Source (GIT_DIR): /home/jef/git
+./.git/hooks/pre-merge-commit.sample:11:test -x "$GIT_DIR/hooks/pre-commit" &&
+./.git/hooks/pre-merge-commit.sample:12:        exec "$GIT_DIR/hooks/pre-commit"
+./.git/hooks/sendemail-validate.sample:62:unset GIT_DIR GIT_WORK_TREE
+./.git/hooks/pre-rebase.sample:112:$GIT_DIR/config mechanism.
+./.git/hooks/update.sample:33:if [ -z "$GIT_DIR" ]; then
+./.git/hooks/update.sample:35:	echo " (if you want, you could supply GIT_DIR then run" >&2
+./.git/hooks/update.sample:53:projectdesc=$(sed -e '1q' "$GIT_DIR/description")
+grep: ./gitdir-refs.log: input file is also the output
+./startup.sh:15:# Users can override by exporting GIT_DIR before running this script.
+./startup.sh:16:GIT_DIR="${GIT_DIR:-}"
+./startup.sh:17:if [ -z "$GIT_DIR" ] && [ -d "$HOME/git" ]; then
+./startup.sh:18:    GIT_DIR="$HOME/git"
+./startup.sh:23:export GIT_DIR
+./startup.sh:171:    info "Syncing repositories from: ${GIT_DIR:-<unset>}"
+./startup.sh:186:                info "If your repos are under ~/git, ensure GIT_DIR is set correctly (e.g., export GIT_DIR=~/git)"
+./sync-all-git-to-ram.sh:27:#   GIT_DIR=/path/to/repos RAM_WORKSPACE=/tmp/dev-workspace ./sync-all-git-to-ram.sh
+./sync-all-git-to-ram.sh:68:GIT_DIR="${GIT_DIR:-}"
+./sync-all-git-to-ram.sh:69:if [ -z "$GIT_DIR" ]; then
+./sync-all-git-to-ram.sh:71:        GIT_DIR="$HOME/git"
+./sync-all-git-to-ram.sh:74:        GIT_DIR="$SCRIPT_DIR/git"
+./sync-all-git-to-ram.sh:101:    if [ ! -d "$GIT_DIR" ]; then
+./sync-all-git-to-ram.sh:102:        echo "ERROR: Source directory not found: $GIT_DIR" >&2
+./sync-all-git-to-ram.sh:103:        echo "Hint: set GIT_DIR to the directory that contains your repositories (commonly: ~/git)" >&2
+./sync-all-git-to-ram.sh:128:    info "Source (GIT_DIR): $GIT_DIR"
+./sync-all-git-to-ram.sh:134:    for top in "$GIT_DIR"/*; do
+./sync-all-git-to-ram.sh:178:    echo "Syncs Git repositories found under GIT_DIR into the RAM workspace"
+./sync-all-git-to-ram.sh:187:    echo "  GIT_DIR=...        Source directory (default: ~/git if it exists; else: ./git relative to this script)"
+./sync-all-git-to-ram.sh:222:    for top in "$GIT_DIR"/*; do
