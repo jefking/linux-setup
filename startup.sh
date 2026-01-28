@@ -171,7 +171,9 @@ sync_repositories() {
     info "Syncing repositories from: ${GIT_DIR:-<unset>}"
     info "Destination RAM workspace: $RAM_WORKSPACE"
 
-    if [ -x "$SYNC_SCRIPT" ] && "$SYNC_SCRIPT"; then
+    # Clean RAM workspace first to avoid stale non-repo directories from previous runs.
+    # NOTE: This will remove everything under $RAM_WORKSPACE.
+    if [ -x "$SYNC_SCRIPT" ] && "$SYNC_SCRIPT" --clean; then
         info "✓ Projects synced successfully"
 
         # Warn if nothing actually ended up in the RAM workspace
